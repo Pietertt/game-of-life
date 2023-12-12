@@ -4,3 +4,11 @@ out
 .idea
 .vs
 .vscode
+bin
+_deps/
+cmake_install.cmake
+CPackSourceConfig.cmake
+CPackConfig.cmake
+CMakeFiles/
+CMakeCache.txt
+.DS_Store
