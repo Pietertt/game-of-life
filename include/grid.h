@@ -1,25 +1,28 @@
 #pragma once
 
+#include <vector>
+
 class Cell;
 
 class Grid {
 
     public:
-        Grid();
-        void spawnGenerations(unsigned int screenWidth, unsigned int screenHeight);
+        Grid(int rows, int columns);
+        void spawnGenerations(unsigned int screenWidth, unsigned int screenHeight, int size);
         void populate();
         void swap();
 
-        void calculateRuleOne();
-        void calculateRuleTwo();
-        void calculateRuleThree();
-        void calculateRuleFour();
+        void calculateRules();
 
         Cell* getCurrentGen(int i, int j);
         Cell* getNextGen(int i, int j);
 
+        int rows;
+        int columns;
+
     private:
-        Cell* currentGeneration [12][12];
-        Cell* nextGeneration [12][12];
+        std::vector<std::vector<Cell*>> currentGeneration;
+        std::vector<std::vector<Cell*>> nextGeneration;
+     
 
 };

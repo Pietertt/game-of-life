@@ -2,54 +2,59 @@
 #include "grid.h"
 #include "cell.h"
 
-Grid::Grid() {
-    for (int i = 0; i < 12; i++) {
-        for (int j = 0; j < 12; j++) {
-            this->currentGeneration[i][j] = NULL;
+Grid::Grid(int rows, int columns) {
+    this->rows = rows;
+    this->columns = columns;
+
+    for (int i = 0; i < this->rows; i++) {
+        std::vector<Cell*> vector;
+        for (int j = 0; j < this->columns; j++) {
+            vector.push_back(NULL);
         }
+        this->currentGeneration.push_back(vector);
     }
 
-    for (int i = 0; i < 12; i++) {
-        for (int j = 0; j < 12; j++) {
-            this->nextGeneration[i][j] = NULL;
+    for (int i = 0; i < this->rows; i++) {
+        std::vector<Cell*> vector;
+        for (int j = 0; j < this->columns; j++) {
+            vector.push_back(NULL);
         }
+        this->nextGeneration.push_back(vector);
     }
 }
 
-void Grid::spawnGenerations(unsigned int screenWidth, unsigned int screenHeight) {
-    int size = (screenHeight / 10) - 10;
-
+void Grid::spawnGenerations(unsigned int screenWidth, unsigned int screenHeight, int size) {    
     // Spawn the current generation
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
+    for (int row = 1; row < this->rows; row++) {
+        for (int position = 1; position < this->columns; position++) {
             Cell* cell = new Cell();
             cell->setX((position - 1) * size + 50);
             cell->setY((row - 1) * size + 50);
             cell->setSize(size);
             cell->setDead(true);
 
-            this->currentGeneration[row][position] = cell;
+            this->currentGeneration.at(row).at(position) = cell;
         }
     }
 
     // Spawn the next generation
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
+    for (int row = 1; row < this->rows; row++) {
+        for (int position = 1; position < this->columns; position++) {
             Cell* cell = new Cell();
             cell->setX((position - 1) * size + 50);
             cell->setY((row - 1) * size + 50);
             cell->setSize(size);
             cell->setDead(true);
 
-            this->nextGeneration[row][position] = cell;
+            this->nextGeneration.at(row).at(position) = cell;
         }
     }
 }
 
 void Grid::populate() {
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
-            Cell* cell = this->currentGeneration[row][position];
+    for (int row = 1; row < this->rows - 1; row++) {
+        for (int position = 1; position < this->columns - 1; position++) {
+            Cell* cell = this->currentGeneration.at(row).at(position);
 
             cell->N__Neighbour = currentGeneration[row - 1][position];
             cell->NE_Neighbour = currentGeneration[row - 1][position + 1];
@@ -70,28 +75,11 @@ void Grid::populate() {
             cell->neighbours[7] = cell->NW_Neighbour;
         }
     }
-
-    this->currentGeneration[3][3]->setDead(false);
-    this->currentGeneration[3][4]->setDead(false);
-    this->currentGeneration[3][5]->setDead(false);
-    this->currentGeneration[2][5]->setDead(false);
-    this->currentGeneration[1][4]->setDead(false);
-
-    this->nextGeneration[3][3]->setDead(false);
-    this->nextGeneration[3][4]->setDead(false);
-    this->nextGeneration[3][5]->setDead(false);
-    this->nextGeneration[2][5]->setDead(false);
-    this->nextGeneration[1][4]->setDead(false);
-    // this->currentGeneration[3][2]->setDead(false);
-    // this->currentGeneration[2][3]->setDead(false);
-    // this->currentGeneration[2][4]->setDead(false);
-    // this->currentGeneration[3][2]->setDead(false);
-    // this->currentGeneration[3][3]->setDead(false);
 }
 
 void Grid::swap() {
-     for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
+     for (int row = 1; row < this->rows - 1; row++) {
+        for (int position = 1; position < this->columns - 1; position++) {
             Cell* cell = this->getCurrentGen(row, position);
 
             bool deadState = this->getNextGen(row, position)->isDead();
@@ -101,9 +89,9 @@ void Grid::swap() {
     }
 }
 
-void Grid::calculateRuleOne() {
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
+void Grid::calculateRules() {
+    for (int row = 1; row < this->rows - 1; row++) {
+        for (int position = 1; position < this->columns - 1; position++) {
             Cell* currentGenCell = this->getCurrentGen(row, position);
             Cell* nextGenCell = this->getNextGen(row, position);
 
@@ -144,62 +132,10 @@ void Grid::calculateRuleOne() {
     }
 }
 
-void Grid::calculateRuleTwo() {
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
-            Cell* cell = this->getCurrentGen(row, position);
-
-            int count = cell->getAliveNeighbourCount();
-
-            // Any live cell with more than three live neighbours dies
-            if (cell->isDead() == false) {
-                if (count > 3) {
-                    cell->setDead(true);
-                }
-            }
-        }
-    }
-}
-
-void Grid::calculateRuleThree() {
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
-            Cell* cell = this->getCurrentGen(row, position);
-
-            int count = cell->getAliveNeighbourCount();
-
-            // Any live cell with two or three live neighbours lives,
-            // unchanged, to the next generation.
-            if (cell->isDead() == false) {
-                if (count == 2 || count == 3) {
-                    // cell->setDead(true);
-                }
-            }
-        }
-    }
-}
-
-void Grid::calculateRuleFour() {
-    for (int row = 1; row < 11; row++) {
-        for (int position = 1; position < 11; position++) {
-            Cell* cell = this->getCurrentGen(row, position);
-
-            int count = cell->getAliveNeighbourCount();
-
-            // Any dead cell with exactly three live neighbours will come to life
-            if (cell->isDead() == true) {
-                if (count == 3) {
-                    cell->setDead(false);
-                }
-            }
-        }
-    }
-}
-
 Cell* Grid::getCurrentGen(int i, int j) {
-    return this->currentGeneration[i][j];
+    return this->currentGeneration.at(i).at(j);
 }
 
 Cell* Grid::getNextGen(int i, int j) {
-    return this->nextGeneration[i][j];
+    return this->nextGeneration.at(i).at(j);
 }

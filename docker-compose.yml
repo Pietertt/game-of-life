@@ -1,0 +1,10 @@
+version: '3.2'
+services:
+  gameoflife:
+    container_name: gameoflife
+    image: gameoflife:latest
+    restart: always
+    tty: true
+    working_dir: /app
+    volumes: 
+      - ./:/app

@@ -3,6 +3,8 @@
 
 Cell::Cell() {
     this->shape.setFillColor(sf::Color::White);
+    this->shape.setOutlineColor(sf::Color{ 0x808080 });
+    this->shape.setOutlineThickness(4);
 }
 
 sf::RectangleShape Cell::getShape() {
