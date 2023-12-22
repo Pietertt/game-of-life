@@ -7,9 +7,12 @@ class Cell;
 class Grid {
 
     public:
-        Grid(int rows, int columns);
-        void spawnGenerations(unsigned int screenWidth, unsigned int screenHeight, int size);
+        Grid();
+        std::string calculateDimensions(std::ifstream &input, int margin, int height, int width);
+        void setDimensions();
+        void spawnGenerations();
         void populate();
+        void setPattern(std::string lines, int margin);
         void swap();
 
         void calculateRules();
@@ -19,6 +22,7 @@ class Grid {
 
         int rows;
         int columns;
+        int size;
 
     private:
         std::vector<std::vector<Cell*>> currentGeneration;

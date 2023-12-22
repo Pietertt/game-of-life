@@ -1,10 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "cell.h"
+#include <iostream>
 
 Cell::Cell() {
     this->shape.setFillColor(sf::Color::White);
     this->shape.setOutlineColor(sf::Color{ 0x808080 });
-    this->shape.setOutlineThickness(4);
+    this->shape.setOutlineThickness(2);
 }
 
 sf::RectangleShape Cell::getShape() {
@@ -63,14 +64,61 @@ void Cell::setDead(bool dead) {
 int Cell::getAliveNeighbourCount() {
     int count = 0;
 
-    if (this->N__Neighbour && !this->N__Neighbour->isDead()) count++;
-    if (this->NE_Neighbour && !this->NE_Neighbour->isDead()) count++;
-    if (this->E__Neighbour && !this->E__Neighbour->isDead()) count++;
-    if (this->SE_Neighbour && !this->SE_Neighbour->isDead()) count++;
-    if (this->S__Neighbour && !this->S__Neighbour->isDead()) count++;
-    if (this->SW_Neighbour && !this->SW_Neighbour->isDead()) count++;
-    if (this->W__Neighbour && !this->W__Neighbour->isDead()) count++;
-    if (this->NW_Neighbour && !this->NW_Neighbour->isDead()) count++;
+    if (this->N__Neighbour) {
+        // std::cout << this->N__Neighbour << std::endl;
+        if (!this->N__Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->NE_Neighbour) {
+        // std::cout << this->NE_Neighbour << std::endl;
+        if (!this->NE_Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->E__Neighbour) {
+        // std::cout << this->E__Neighbour << std::endl;
+        if (!this->E__Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->SE_Neighbour) {
+        // std::cout << this->SE_Neighbour << std::endl;
+        if (!this->SE_Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->S__Neighbour) {
+        // std::cout << this->S__Neighbour << std::endl;
+        if (!this->S__Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->SW_Neighbour) {
+        // std::cout << this->SW_Neighbour << std::endl;
+        if (!this->SW_Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->W__Neighbour) {
+        // std::cout << this->W__Neighbour << std::endl;
+        if (!this->W__Neighbour->isDead()) {
+            count++;
+        }
+    }
+
+    if (this->NW_Neighbour) {
+        // std::cout << this->NW_Neighbour << std::endl;
+        if (!this->NW_Neighbour->isDead()) {
+            count++;
+        }
+    }
 
     return count;
 }

@@ -8,6 +8,7 @@
 #include <thread>
 #include "cell.h"
 #include "grid.h"
+#include <ctype.h>
 
 int main(int argc, char** argv) {
     auto mainDisplayId = CGMainDisplayID();
@@ -21,46 +22,19 @@ int main(int argc, char** argv) {
     int rows = 0;
     int columns = 0;
 
-    Grid* grid = NULL;
+    Grid* grid = new Grid();
 
-    if (argv[1] == "random") {
+    int margin = 30;
 
-    } else {
-        std::string filename = "templates/";
-        filename += argv[1];
+    std::ifstream input("templates/gosperglidergun.rle");
 
-        std::ifstream input(filename);
+    std::string lines;
 
-        for (std::string line; getline( input, line );) {
-            if (count == 0) {
-                rows = std::stoi(line.substr(0, line.find(",")));
-                columns = std::stoi(line.substr(0, line.find(",")));
-
-                rows = rows + 2;
-                columns = columns + 2;
-
-                int size = (height / columns);
-
-                grid = new Grid(rows, columns);
-                grid->spawnGenerations(width, height, size);
-                grid->populate();
-            } else {
-                line.erase(std::remove(line.begin(), line.end(), ' '), line.end());
-                std::stringstream ss(line);
-                std::string segment;
-                std::vector<int> seglist;
-
-                while(std::getline(ss, segment, ',')) {
-                    seglist.push_back(std::stoi(segment));
-                }
-
-                for (int i = 1; i < seglist.size(); i++) {
-                    grid->getCurrentGen(count, i)->setDead(!seglist.at(i));
-                }
-            }
-            count++;
-        };
-    }
+    lines = grid->calculateDimensions(input, margin, height, width);
+    grid->setDimensions();
+    grid->spawnGenerations();
+    grid->populate();
+    grid->setPattern(lines, margin);
 
     while (window.isOpen()) {
         for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -71,8 +45,8 @@ int main(int argc, char** argv) {
 
         window.clear(sf::Color::White);
 
-        for (int i = 1; i < rows - 1; i++) {
-            for (int j = 1; j < columns - 1; j++) {
+        for (int i = 0; i < grid->rows; i++) {
+            for (int j = 0; j < grid->columns; j++) {
                 window.draw(grid->getCurrentGen(i, j)->getShape());
             }
         }
@@ -82,6 +56,6 @@ int main(int argc, char** argv) {
         grid->calculateRules();
         grid->swap();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }

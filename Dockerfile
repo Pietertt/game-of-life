@@ -1,15 +1,14 @@
-FROM alpine:latest
+FROM debian:11
 
-RUN apk update \
-  && apk upgrade \
-  && apk add --no-cache \
-    clang \
-    clang-dev \
-    alpine-sdk \
-    dpkg \
+RUN apt-get update \
+ && apt-get install --assume-yes --no-install-recommends --quiet \
+    ca-certificates \
     cmake \
-    ccache \
-    python3
+    git \
+    g++ \
+    make \
+    libzip-dev \
+ && apt-get clean all
 
 # RUN ln -sf /usr/bin/clang /usr/bin/cc \
 #   && ln -sf /usr/bin/clang++ /usr/bin/c++ \
@@ -23,4 +22,4 @@ RUN apk update \
 #   && cc --version \
 #   && c++ --version
 
-WORKDIR /app
+WORKDIR /usr/local/src

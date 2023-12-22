@@ -28,20 +28,18 @@ class Cell {
         // W   .  E
         // SW  S  SE
 
-        Cell* N__Neighbour;
-        Cell* NE_Neighbour;
-        Cell* E__Neighbour;
-        Cell* SE_Neighbour;
-        Cell* S__Neighbour;
-        Cell* SW_Neighbour;
-        Cell* W__Neighbour;
-        Cell* NW_Neighbour;
-
-        Cell* neighbours[8];
+        Cell* N__Neighbour = NULL;
+        Cell* NE_Neighbour = NULL;
+        Cell* E__Neighbour = NULL;
+        Cell* SE_Neighbour = NULL;
+        Cell* S__Neighbour = NULL;
+        Cell* SW_Neighbour = NULL;
+        Cell* W__Neighbour = NULL;
+        Cell* NW_Neighbour = NULL;
 
     private:
-        float x;
-        float y;
+        float x = 0;
+        float y = 0;
         float size;
         sf::RectangleShape shape;
         bool dead;
